@@ -1,29 +1,29 @@
 const { Schema, model } = require('mongoose');
 
-// Schema to create User model
-const userSchema = new Schema(
+// Schema to create Thought model
+const thoughtSchema = new Schema(
   {
-    username: {
+    thoughtText: {
       type: String,
-      unique: true,
       required: true,
-      trim: true
+      minLength: 8,
+      maxLength: 280
     },
-    email: {
+    createdAt: {
       type: String,
       required: true,
       unique: true,
       // match: {const reEmail = '/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/' },
     },
-    thoughts: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'thought',
-      }
-    ],
-    friends: {
-      type: Schema.Types.ObjectId,
-      ref: 'friend',
+    username: {
+        type: String,
+        required: true,
+    },
+    reactions: {
+        type: String,
+        required: true,
+        minLength: 8,
+        maxLength: 280
     }
   },
   {
@@ -34,7 +34,7 @@ const userSchema = new Schema(
   }
 );
 
-userSchema
+thoughtSchema
   .virtual('friendCount')
   // Getter
   .get(function () {
@@ -45,7 +45,7 @@ userSchema
     this.set(this.friends.length);
   });
 
-// Initialize our User model
-const User = model('user', userSchema);
+// Initialize our Thought model
+const Thought = model('thought', thoughtSchema);
 
-module.exports = User;
+module.exports = Thought;
