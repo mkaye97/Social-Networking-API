@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const Reactions = require('./Reaction')
 
 // Schema to create Thought model
 const thoughtSchema = new Schema(
@@ -6,25 +7,18 @@ const thoughtSchema = new Schema(
     thoughtText: {
       type: String,
       required: true,
-      minLength: 8,
+      minLength: 1,
       maxLength: 280
     },
     createdAt: {
-      type: String,
-      required: true,
-      unique: true,
-      // match: {const reEmail = '/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/' },
+      type: Date,
+      default: Date.now,
     },
     username: {
         type: String,
         required: true,
     },
-    reactions: {
-        type: String,
-        required: true,
-        minLength: 8,
-        maxLength: 280
-    }
+    reactions: Reactions,
   },
   {
     toJSON: {
@@ -35,14 +29,10 @@ const thoughtSchema = new Schema(
 );
 
 thoughtSchema
-  .virtual('friendCount')
+  .virtual('reactionCount')
   // Getter
   .get(function () {
-    return `${this.friends.length}`;
-  })
-  // Setter friend count
-  .set(function () {
-    this.set(this.friends.length);
+    return `${this.reactions.length}`;
   });
 
 // Initialize our Thought model

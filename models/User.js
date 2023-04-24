@@ -45,10 +45,6 @@ userSchema
   // Getter
   .get(function () {
     return `${this.friends.length}`;
-  })
-  // Setter friend count
-  .set(function () {
-    this.set(this.friends.length);
   });
 
 // Initialize our User model
