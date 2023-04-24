@@ -13,7 +13,13 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      // match: {const reEmail = '/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/' },
+      validate: {
+        validator: function (v) {
+          const re = '/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/';
+          return re.test(v)
+        },
+        message: 'You must use a valid email!'
+      },
     },
     thoughts: [
       {
@@ -23,7 +29,7 @@ const userSchema = new Schema(
     ],
     friends: {
       type: Schema.Types.ObjectId,
-      ref: 'friend',
+      ref: 'user',
     }
   },
   {
