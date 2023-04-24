@@ -13,7 +13,7 @@ module.exports = {
       .select('-__v')
       .then((user) =>
         !user
-          ? res.status(404).json({ message: 'Cannot find user!' })
+          ? res.status(404).json({ message: 'Cannot find a user with the requested ID.' })
           : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
@@ -21,7 +21,7 @@ module.exports = {
 
   createUser(req, res) {
     User.create(req.body)
-      .then((dbUserData) => res.status(200).json(dbUserData))
+      .then((user) => res.status(200).json(user))
       .catch((err) => res.status(500).json(err));
   },
 
@@ -31,25 +31,49 @@ module.exports = {
       { $set: req.body },
       { new: true }
     )
-      .then((updUser => {
-        !updUser
-          ? res.status(404).json({ message: 'Cannot find user!' })
-          : res.status(200).json({ message: 'User has been succesfully updated.'})
+      .then((user => {
+        !user
+          ? res.status(404).json({ message: 'Cannot find a user with the requested ID.' })
+          : res.status(200).json({ message: 'User has been succesfully updated.' })
       }
       ))
       .catch((err) => res.status(500).json(err))
   },
 
-  deleteUser(req, res) {
-    User.findByIdAndDelete(
-      { _id: req.params.userId }
-      )
-      .then(
-        !user
-          ? res.status(404).json({ message: 'Cannot find user!' })
-          : res.status(200).json({ message: 'User has been successfully deleted.' })
-      )
-      .catch((err) => res.status(500).json(err))
-  }
+  deleteUser(req, res){
+    User.findByIdAndDelete({ _id: req.params.userId })
+    .then((user) =>
+    !user
+      ? res.status(404).json({ message: 'Cannot find a user with the requested ID.' })
+      : Thought.deleteMany({ _id: { $in: user.thoughts } })
+  )
+  .then(() => res.json({ message: "User and all of the User's thoughts have been deleteModel." }))
+  .catch((err) => res.status(500).json(err))
+},
 
+  addFriend(req, res) {
+    User.findByIdAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(400).json({ message: 'Cannot find a user with the requested ID.' })
+          : res.status(200).json(user))
+      .catch((err) => res.status(500).json(err))
+  },
+
+  removeFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friends: req.params.friendId } },
+      { new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(400).json({ message: 'Cannot find a user with the requested ID.' })
+          : res.status(200).json(user))
+      .catch((err) => res.status(500).json(err))
+  },
 };
