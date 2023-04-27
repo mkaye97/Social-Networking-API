@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, Types } = require('mongoose');
 
 // Schema to create Reaction model
 const reactionSchema = new Schema(
@@ -6,6 +6,7 @@ const reactionSchema = new Schema(
     reactionId: {
       type: Schema.Types.ObjectId,
       required: true,
+      default: () => new Types.ObjectId()
     },
     reactionBody: {
         type: String,
@@ -19,24 +20,16 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      get: timestamp => timestamp.toLocaleDateString()
     },
   },
   {
     toJSON: {
       virtuals: true,
+      getters: true
     },
     id: false,
   }
 );
 
-reactionSchema
-  .virtual('reactionCount')
-  // Getter
-  .get(function () {
-    return `${this.reactions.length}`;
-  });
-
-// Initialize our Reaction model
-const Reaction = model('reaction', reactionSchema);
-
-module.exports = Reaction;
+module.exports = reactionSchema;

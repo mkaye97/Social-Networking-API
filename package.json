@@ -4,11 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index",
+    "start": "node server.js",
     "seed": "node utils/seed"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
-   "mongoose": "^6.9.2"
+    "mongoose": "^6.9.2"
   }
 }

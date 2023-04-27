@@ -1,15 +1,15 @@
-const User = require('../models/User');
+const { Thought, User } = require('../models');
 
 module.exports = {
 
   getUsers(req, res) {
-    User.find()
+    User.find().populate('thoughts').populate('friends')
       .then((users) => res.status(200).json(users))
       .catch((err) => res.status(500).json(err));
   },
 
   getSingleUser(req, res) {
-    User.findOne({ _id: req.params.userId })
+    User.findOne({ _id: req.params.userId }).populate('thoughts').populate('friends')
       .select('-__v')
       .then((user) =>
         !user
@@ -41,13 +41,13 @@ module.exports = {
   },
 
   deleteUser(req, res){
-    User.findByIdAndDelete({ _id: req.params.userId })
+    User.findByIdAndDelete(req.params.userId)
     .then((user) =>
     !user
       ? res.status(404).json({ message: 'Cannot find a user with the requested ID.' })
       : Thought.deleteMany({ _id: { $in: user.thoughts } })
   )
-  .then(() => res.json({ message: "User and all of the User's thoughts have been deleteModel." }))
+  .then(() => res.json({ message: "User and all of the User's thoughts have been deleted." }))
   .catch((err) => res.status(500).json(err))
 },
 
