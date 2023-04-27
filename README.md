@@ -1,5 +1,9 @@
 # Social-Networking-API
 
+## Description
+
+This application serves as a basic back end framework for a social networking platform. It is capable of storing all basic data that such an application would need to function, including user information, thoughts to be used as posts, and responses to said thoughts. It also contains information connecting users who would be considered "friends" in a modern social media application.
+
 ## User Story
 
 ```md
@@ -21,3 +25,7 @@ THEN I am able to successfully create, update, and delete users and thoughts in 
 WHEN I test API POST and DELETE routes in Insomnia
 THEN I am able to successfully create and delete reactions to thoughts and add and remove friends to a user’s friend list
 ```
+
+## Links
+
+Video Walkthrough: https://drive.google.com/file/d/1Wb65ptDP35wh6Tqqwmhx9iT9eBfURup7/view
